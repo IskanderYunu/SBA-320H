@@ -1,4 +1,4 @@
-//API for Elixirs Sits Here
+//API for Elixirs Here
 
 export const fetchElixirs = async () => {
   const response = await fetch(

@@ -3,14 +3,13 @@ import { fetchElixirs } from "../services/api";
 
 const ElixirList = () => {
   const [elixirs, setElixirs] = useState([]);
-  const [selectedElixir, setSelectedElixir] = useState(null);
+  const [visibleIngredients, setVisibleIngredients] = useState({});
 
   useEffect(() => {
     const getElixirs = async () => {
       try {
         const data = await fetchElixirs();
-        console.log("Fetched elixirs:", data); //debug
-
+        console.log("Fetched elixirs:", data); // Debug log
         setElixirs(data);
       } catch (error) {
         console.error("Error Fetching the Sauce:", error);
@@ -19,36 +18,47 @@ const ElixirList = () => {
     getElixirs();
   }, []);
 
-  const handleElixirClick = (elixir) => {
-    console.log("Selected Elixir:", elixir); //debug
-    setSelectedElixir(elixir);
+  const toggleIngredients = (id) => {
+    setVisibleIngredients((prevState) => ({
+      ...prevState,
+      [id]: !prevState[id],
+    }));
   };
 
   return (
     <div>
       <h1>Your an Elixir Harry!</h1>
-      <ul>
+      <div>
         {elixirs.map((elixir) => (
-          <li key={elixir.id}>
-            {elixir.name}{" "}
-            <button onClick={() => handleElixirClick(elixir)}>
-              View Details
+          <div
+            key={elixir.id}
+            style={{
+              border: "1px solid black",
+              margin: "20px",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            <h2>{elixir.name}</h2>
+            <p>
+              <strong>Effect:</strong> {elixir.effect}
+            </p>
+            <button onClick={() => toggleIngredients(elixir.id)}>
+              {visibleIngredients[elixir.id]
+                ? "Hide Ingredients"
+                : "Show Ingredients"}
             </button>
-          </li>
+            {visibleIngredients[elixir.id] && (
+              <p>
+                <strong>Ingredients:</strong>{" "}
+                {elixir.ingredients
+                  .map((ingredient) => ingredient.name)
+                  .join(", ")}
+              </p>
+            )}
+          </div>
         ))}
-      </ul>
-      {selectedElixir && (
-        <div>
-          <h2>{selectedElixir.name}</h2>
-          <p>
-            <strong>Effect:</strong> {selectedElixir.effect}
-          </p>
-          <p>
-            <strong>Ingredients:</strong>{" "}
-            {selectedElixir.ingredients.join(", ")}
-          </p>
-        </div>
-      )}
+      </div>
     </div>
   );
 };
