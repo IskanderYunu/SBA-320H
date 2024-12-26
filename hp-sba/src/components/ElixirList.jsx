@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { fetchElixirs } from "../services/api";
 import "slick-carousel/slick/slick.css"; //imported carousel css
@@ -66,6 +67,7 @@ const ElixirList = () => {
     getElixirs();
   }, []);
 
+  //Toggles ingredient visibility
   const handleToggleIngredients = (id) => {
     setVisibleIngredients((prevState) => ({
       ...prevState,
@@ -73,16 +75,19 @@ const ElixirList = () => {
     }));
   };
 
+  //Addes Elixir favorites
   const handleFavorite = (elixir) => {
     setFavorites((prevFavorites) => [...prevFavorites, elixir]);
   };
 
+  //Removes Elixir favorites
   const handleRemoveFavorite = (id) => {
     setFavorites((prevFavorites) =>
       prevFavorites.filter((elixir) => elixir.id !== id)
     );
   };
 
+  //Settings for Arrows/carousel
   const settings = {
     dots: false,
     infinite: true,
@@ -95,18 +100,19 @@ const ElixirList = () => {
 
   return (
     <div>
-      <div style={{ textAlign: "center", color: "#FFDAB9" }}>
+      <div
+        style={{
+          textAlign: "center",
+          color: "#FFDAB9",
+        }}
+      >
         <h1>You're an Elixir Harry!⚗️</h1>
         <h2>Choose your potion wisely...</h2>
-        <p>*Some Ingredients are missing/classified*</p>
+        <p>**Some Ingredients missing/classified**</p>
       </div>
       <Slider {...settings}>
         {elixirs.map((elixir) => (
-          <div
-            key={elixir.id}
-            //might not be needed DELETE?
-            style={{ padding: "100px", position: "relative" }}
-          >
+          <div key={elixir.id}>
             <div
               style={{
                 border: "1px outset #8B4513",
@@ -118,6 +124,7 @@ const ElixirList = () => {
                 backgroundColor: "#FAEBD7",
               }}
             >
+              {/* //Favorite button */}
               <button
                 onClick={() => handleFavorite(elixir)}
                 style={{
@@ -169,6 +176,7 @@ const ElixirList = () => {
           backgroundColor: "#FAEBD7",
         }}
       >
+        {/* Favorite Elixirs Box */}
         <h2>My Favorite Elixirs</h2>
         {favorites.length === 0 ? (
           <p>No favorite elixirs yet.</p>
@@ -198,6 +206,7 @@ const ElixirList = () => {
                   onClick={() => handleRemoveFavorite(elixir.id)}
                   style={{ marginLeft: "10px" }}
                 >
+                  {/* Delete from Favorites Button */}
                   Delete
                 </button>
               </li>
